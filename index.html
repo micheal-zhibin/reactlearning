@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>demo1</title>
+	<script src="./build/react.js"></script>
+	<script src="./build/react-dom.js"></script>
+	<script src="./build/browser.min.js"></script>
+	<script src="./build/jquery.min.js"></script>
+	<link rel="stylesheet" href="">
+</head>
+<body>
+	<div id="example"></div>
+	<script type="text/babel">
+		// function getGreeting(user) {
+		// 	const element = (
+		// 		<div>
+		// 			<h1>hello world!</h1>
+		// 			<h2>now is {new Date().toLocaleTimeString()}</h2>
+		// 		</div>
+		// 	)
+
+		// 	ReactDOM.render(
+		// 		element,
+		// 		document.getElementById('example')
+		// 	)
+		// }
+		// setInterval(getGreeting, 1000)
+
+		// const element = getGreeting('micheal')
+
+		// ReactDOM.render(
+		// 	element,
+		// 	document.getElementById('example')
+		// )
+		// function Welcome(props) {
+		// 	return <h1>hello {props.name}</h1>
+		// }
+
+		// function App() {
+		// 	return (
+		// 		<div>
+		// 			<Welcome name="micheal" />
+		// 			<Welcome name="zhibin" />
+		// 			<Welcome name="hewen" />
+		// 		</div>
+		// 	)
+		// }
+
+		// function Avatar(props) {
+		// 	return (
+		// 		<img src={props.user.avatarurl} alt={props.user.name} />
+		// 	)
+		// }
+
+		// function UserInfo(props) {
+		// 	return (
+		// 		<div className="UserInfo">
+		// 			<Avatar user={props.user} />
+		// 			<div className="UserInfo-name">
+		// 				{props.user.name}
+		// 			</div>
+		// 		</div>
+		// 	)
+		// }
+
+		// function Component(props) {
+		// 	return (
+		// 		<div className="Comment">
+		// 			<UserInfo user={props.author} />
+		// 			<div className="Comment-text">
+		// 				{props.text}
+		// 			</div>
+		// 			<div className="Comment-date">
+		// 				{formatDate(props.date)}
+		// 			</div>
+		// 		</div>
+		// 	)
+		// }
+
+		// ReactDOM.render(
+		// 	<Component />,
+		// 	document.getElementById('example')
+		// )
+		
+		class Clock extends React.Component {
+			constructor(props) {
+				super(props)
+				this.state = {date: new Date()}
+			}
+
+			componentDidMount() {
+				this.timerID = setInterval(
+					() => this.tick(), 1000
+				)
+			}
+
+			componentWillUnMount() {
+				clearInterval(this.timerID)
+			}
+
+			tick() {
+				this.setState({
+					date: new Date()
+				})
+			}
+
+			render() {
+				return (
+					<div>
+						<h1>hello world!</h1>
+						<h2>now is {this.state.date.toLocaleTimeString()}</h2>
+					</div>
+				)
+			}
+		}
+
+		function App() {
+			return (
+				<div>
+					<Clock />
+					<Clock />
+					<Clock />
+				</div>
+			)
+		}
+
+		class Toggle extends React.Component {
+			constructor(props) {
+				super(props)
+				this.state = {isToggleOn: false}
+
+				this.handleClick = this.handleClick.bind(this)
+			}
+
+			handleClick() {
+				this.setState(prevState => ({
+					isToggleOn: !prevState.isToggleOn
+				}))
+			}
+
+			render() {
+				return(
+					<button onClick={this.handleClick}>
+						{this.state.isToggleOn ? 'on' : 'off'}
+					</button>
+				)
+			}
+		}
+
+		class Popper extends React.Component {
+			constructor(props) {
+				super(props)
+				this.state = {name: 'hello world!'}
+			}
+
+			preventPop(name, e) {
+				e.preventDefault()
+				alert(name)
+			}
+
+			render() {
+				return(
+					<div>
+						<p>hello</p>
+						<a href="https://reactjs.org" onClick={this.preventPop.bind(this, this.state.name)}>click</a>
+					</div>
+				)
+			}
+		}
+
+		function Greeting(props) {
+			var isLogin = props.isLogin
+			if (isLogin) {
+				return <h1>welcome back</h1>
+			} else {
+				return <h1>Please sign up</h1>
+			}
+		}
+
+		class LoginControl extends React.Component {
+			constructor(props) {
+				super(props)
+				this.state = {
+					isLogin: false
+				}
+				this.handleLoginClick = this.handleLoginClick.bind(this)
+				this.handleLogoutClick = this.handleLogoutClick.bind(this)
+			}
+
+			handleLoginClick() {
+				this.setState({
+					isLogin: true
+				})
+			}
+
+			handleLogoutClick() {
+				this.setState({
+					isLogin: false
+				})
+			}
+
+			render() {
+				var button = ''
+				if (this.state.isLogin) {
+					button = <button onClick={this.handleLogoutClick}>logout</button>
+				} else {
+					button = <button onClick={this.handleLoginClick}>login</button>
+				}
+
+				return (
+					<div>
+						<Greeting isLogin={this.state.isLogin}/>
+						{button}
+					</div>
+				)
+			}
+		}
+
+		function UnreadMessage(props) {
+			const message = props.message
+
+			return (
+				<div>
+					<h1>hello</h1>
+					{message.length > 0 && 
+						<h2>you have {message.length} message unread</h2>
+					}
+				</div>
+			)
+		}
+
+		function Warning(props) {
+			if (!props.warn) {
+				return null
+			}
+
+			return (
+				<div className="warning">
+					warning!
+				</div>
+			)
+		}
+
+		class Page extends React.Component {
+			constructor(props) {
+				super(props)
+				this.state = {showWarning: false}
+				this.handleClick = this.handleClick.bind(this)
+			}
+
+			handleClick() {
+				this.setState(preveState => ({
+					showWarning: !preveState.showWarning
+				}))
+			}
+
+			render() {
+				return (
+					<div>
+						<Warning warn={this.state.showWarning} />
+						<button onClick={this.handleClick}>
+							{this.state.showWarning ? 'hide' : 'show'}
+						</button>
+					</div>
+				)
+			}
+		}
+
+		// const unreadmsg = ['123', '321', '222']
+		const unreadmsg = []
+		const numbers = [1,2,3,4,5];
+
+		function ListItem(props) {
+			return <li>{props.value}</li>
+		}
+
+		function NumberList(props) {
+			const numbers = props.numbers
+			return <ul>{numbers.map((number) =>
+				(<ListItem key={number.toString()} value={number} />)
+			)}</ul>
+		}
+
+		class NameForm extends React.Component {
+			constructor(props) {
+				super(props)
+				this.state = {value: ''}
+
+				this.handleChange = this.handleChange.bind(this)
+				this.handleSubmit = this.handleSubmit.bind(this)
+			}
+
+			handleChange(event) {
+				this.setState({
+					value: event.target.value.toUpperCase()
+				})
+			}
+
+			handleSubmit(event) {
+				alert('A name was submitted: ' + this.state.value)
+				event.preventDefault()
+			}
+
+			render() {
+				return (
+					<form onSubmit={this.handleSubmit}>
+						<label>
+							name:
+							<input type="text" value={this.state.value} onChange={this.handleChange} />
+						</label>
+						<input type="submit" name="" value="" />
+					</form>
+				)
+			}
+		}
+
+		class EasyForm extends React.Component {
+			constructor(props) {
+				super(props)
+				this.state = {value: ''}
+
+				this.handleChange = this.handleChange.bind(this)
+				this.handleSubmit = this.handleSubmit.bind(this)
+			}
+
+			handleChange(event) {
+				this.setState({
+					value: event.target.value.toUpperCase()
+				})
+			}
+
+			handleSubmit(event) {
+				alert('A name was submitted: ' + this.state.value)
+				event.preventDefault()
+			}
+
+			render() {
+				return (
+					<form onSubmit={this.handleSubmit}>
+						<label>
+							name:
+							<textarea type="text" value={this.state.value} onChange={this.handleChange} />
+						</label>
+						<input type="submit" name="" value="" />
+					</form>
+				)
+			}
+		}
+
+		class FlavorForm extends React.Component {
+			constructor(props) {
+				super(props)
+				this.state = {value: 'coconut'}
+			this.handleChange = this.handleChange.bind(this)
+				this.handleSubmit = this.handleSubmit.bind(this)
+			}
+
+			handleChange(event) {
+				this.setState({
+					value: event.target.value
+				})
+			}
+
+			handleSubmit(event) {
+				alert('you favourite flavor is: ' + this.state.value)
+				event.preventDefault()
+			}
+
+			render() {
+				return (
+					<form onSubmit={this.handleSubmit}>
+						<label>
+							pick you favourite flavor:
+							<select value={this.state.value} onChange={this.handleChange}>
+								<option value="grapefruit">grapefruit</option>
+								<option value="lime">lime</option>
+								<option value="coconut">coconut</option>
+								<option value="mango">mango</option>
+							</select>
+						</label>
+						<input type="submit" name="" value="" />
+					</form>
+				)
+			}
+		}
+
+		class Reservation extends React.Component {
+			constructor(props) {
+				super(props)
+				this.state = {
+					isGoing: true,
+					NumberOfGuest: 2
+				}
+
+				this.handleInputChange = this.handleInputChange.bind(this)
+			}
+
+			handleInputChange(event) {
+				const target = event.target
+				const value = target.type === "checkbox" ? target.checked : target.value
+				const name = target.name
+
+				this.setState({
+					[name]: value
+				})
+			}
+
+			render() {
+				return (
+					<form>
+						<label>is going<input type="checkbox" name="isGoing" value={this.state.isGoing} onChange={this.handleInputChange} /></label>
+						<label>number of guests<input type="number" name="NumberOfGuest" value={this.state.NumberOfGuest} onChange={this.handleInputChange} /></label>
+					</form>
+				)
+			}
+		}
+
+		function BolingVerdict(props) {
+			if (props.celsius >= 100) {
+				return <p>水会烧开</p>
+			} else {
+				return <p>水不会烧开</p>
+			}
+		}
+
+		const scaleNames = {
+			c: 'Celsius',
+			f: 'Fahrenheit'
+		};
+
+		class TemperatureInput extends React.Component {
+			constructor(props) {
+				super(props)
+				this.handleChange = this.handleChange.bind(this)
+			}
+
+			handleChange(e) {
+				this.props.onTemperatureChange(e.target.value)
+			}
+
+			render() {
+				const temperature = this.props.temperature
+				const scale = this.props.scale
+				return (
+					<fieldset>
+						<legend>Enter temperature in {scaleNames[scale]}:</legend>
+						<input value={temperature} onChange={this.handleChange} />
+					</fieldset>
+				)
+			}
+		}
+
+		class Calculator extends React.Component {
+			constructor(props) {
+				super(props)
+				this.state = {temperature: '', scale: 'c'}
+				this.handleCeChange = this.handleCeChange.bind(this)
+				this.handleFaChange = this.handleFaChange.bind(this)
+			}
+
+			handleCeChange(temperature) {
+				this.setState({
+					temperature: temperature,
+					scale: 'c'
+				})
+			}
+
+			handleFaChange(temperature) {
+				this.setState({
+					temperature: temperature,
+					scale: 'f'
+				})
+			}
+
+			render() {
+				const scale = this.state.scale
+				const temperature = this.state.temperature
+				const ce = scale == 'c' ? temperature : tryConvert(temperature, toCelsius)
+				const fa = scale == 'f' ? temperature : tryConvert(temperature, toFahrenheit)
+				return (
+					<div>
+						<TemperatureInput scale="c" temperature={ce} onTemperatureChange={this.handleCeChange} />
+						<TemperatureInput scale="f" temperature={fa} onTemperatureChange={this.handleFaChange} />
+						<BolingVerdict celsius={parseFloat(ce)} />
+					</div>
+				)
+			}
+		}
+
+		function toCelsius(fa) {
+			return (fa - 32) * 5 / 9;
+		}
+
+		function toFahrenheit(ce) {
+			return ce * 9 / 5 +32
+		}
+
+		function tryConvert(temperature, convert) {
+			const input = parseFloat(temperature)
+			if (Number.isNaN(input)) {
+				return '';
+			}
+			const output = convert(input)
+			const rounded = Math.round(output * 1000) / 1000
+			return rounded.toString()
+		}
+
+		function FancyBorder(props) {
+			return (
+				<div style={{border: '1px solid ' + props.color}}>
+					{props.children}
+				</div>
+			)
+		}
+
+		function Dialog(props) {
+			return (
+				<FancyBorder color="blue">
+					<h1>{props.title}</h1>
+					<p>{props.message}</p>
+					{props.children}
+				</FancyBorder>
+			)
+		}
+
+		function WelcomeDialog(props) {
+			return (
+				<Dialog title="hello" message="thank you" />
+			)
+		}
+
+		class SignUpDialog extends React.Component {
+			constructor(props) {
+				super(props)
+				this.state = {
+					login: ''
+				}
+				this.handleChange = this.handleChange.bind(this)
+				this.handleSignUp = this.handleSignUp.bind(this)
+			}
+
+			handleChange(e) {
+				this.setState({login: e.target.value})
+			}
+
+			handleSignUp() {
+				alert(`Welcome aborad, ${this.state.login}!`)
+			}
+
+			render() {
+				return (
+					<Dialog title="Mars Exploration Program" message="How should we refer to you?">
+						<input name="" value={this.state.login} onChange={this.handleChange} />
+						<button onClick={this.handleSignUp}>sign me up!</button>
+					</Dialog>
+				)
+			}
+		}
+
+		const querydate = [
+			{category: "Sporting Goods", price: "$49.99", stocked: true, name: "Football"},
+			{category: "Sporting Goods", price: "$9.99", stocked: true, name: "Baseball"},
+			{category: "Sporting Goods", price: "$29.99", stocked: false, name: "Basketball"},
+			{category: "Electronics", price: "$99.99", stocked: true, name: "iPod Touch"},
+			{category: "Electronics", price: "$399.99", stocked: false, name: "iPhone 5"},
+			{category: "Electronics", price: "$199.99", stocked: true, name: "Nexus 7"}
+		];
+
+		function search(keyword, obj) {
+			var isget = false
+			$.each(Object.keys(obj), function(index, item) {
+				if (item != 'stocked' && obj[item].indexOf(keyword) != -1) {
+					isget = true
+				}
+			})
+			return isget
+		}
+
+		class Root extends React.Component {
+			constructor(props) {
+				super(props)
+				this.state = {
+					keyword: '',
+					stocked: false,
+					pl: []
+				}
+				this.handleKeyword = this.handleKeyword.bind(this)
+				this.handleStocked = this.handleStocked.bind(this)
+			}
+
+			handleKeyword(value) {
+				this.setState({
+					keyword: value
+				})
+			}
+
+			handleStocked(value) {
+				this.setState({
+					stocked: value
+				})
+			}
+
+			render() {
+				const stocked = this.state.stocked
+				const keyword = this.state.keyword
+				let prolist = []
+				if (!keyword && !stocked) {
+					prolist = querydate
+				} else if (keyword && !stocked) {
+					prolist = querydate.filter(function(v) {
+						return search(keyword, v)
+					})
+				} else if (keyword && stocked) {
+					prolist = querydate.filter(function(v) {
+						return search(keyword, v) && v.stocked == stocked
+					})
+				} else if (!keyword && stocked) {
+					prolist = querydate.filter(function(v) {
+						return v.stocked == stocked
+					})
+				}
+				return (
+					<div>
+						<Searchnav keyword={keyword} onKeyword={this.handleKeyword} stocked={stocked} onStocked={this.handleStocked} />
+						<Productlist pl={prolist} />
+					</div>
+				)
+			}
+		}
+
+		class Searchnav extends React.Component {
+			constructor(props) {
+				super(props)
+				this.handleKeywordChange = this.handleKeywordChange.bind(this)
+				this.handleCheckChange = this.handleCheckChange.bind(this)
+			}
+
+			handleKeywordChange(e) {
+				this.props.onKeyword(e.target.value)
+			}
+
+			handleCheckChange(e) {
+				this.props.onStocked(e.target.value)
+			}
+
+			render() {
+				return (
+					<div>
+						<input type="text" onChange={this.handleKeywordChange} value={this.props.keyword} />
+						<br />
+						<input type="checkbox" onChange={this.handleCheckChange} value={this.props.stocked} />
+							only show products in stock
+					</div>
+				)
+			}
+		}
+
+		class Productlist extends React.Component {
+			constructor(props) {
+				super(props)
+			}
+
+			render() {
+				const pl = this.props.pl
+				const category = []
+				for(let i = 0;i < pl.length;i ++) {
+					const item = pl[i]
+					if (category.indexOf(item.category) == -1) {
+						category.push(item.category)
+					}
+				}
+				const categorylist = {}
+				for(let i = 0;i < category.length;i ++) {
+					const item = category[i]
+					if (!categorylist[item]) {
+						const temp = pl.filter(function(v) {return v.category == item})
+						categorylist[item] = [<CategoryHead name={item} />]
+						const bodylist = temp.map((number) =>
+							(<Categorybody name={number.name} price={number.price} />)
+						)
+						categorylist[item] = categorylist[item].concat(bodylist)
+					}
+				}
+				let tablebody = []
+				for(let i = 0;i < category.length;i ++) {
+					tablebody = tablebody.concat(categorylist[category[i]])
+				}
+				return (
+					<table>
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Price</th>
+							</tr>
+						</thead>
+						<tbody>
+							{tablebody}
+						</tbody>
+					</table>
+				)
+			}
+		}
+
+		class CategoryHead extends React.Component {
+			constructor(props) {
+				super(props)
+			}
+
+			render() {
+				return (
+					<tr key={this.props.name}>
+						<td colspan="2">{this.props.name}</td>
+					</tr>
+				)
+			}
+		}
+
+		class Categorybody extends React.Component {
+			constructor(props) {
+				super(props)
+			}
+
+			render() {
+				return (
+					<tr key={this.props.name}>
+						<td>{this.props.name}</td>
+						<td>{this.props.price}</td>
+					</tr>
+				)
+			}
+		}
+
+		ReactDOM.render(
+			<Root />,
+			document.getElementById('example')
+		)
+	</script>
+</body>
+</html>
